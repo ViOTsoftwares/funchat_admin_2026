@@ -14,12 +14,17 @@ export const menuList: Menu[] = [
     path: "/",
   },
   {
-    label: "Projects",
+    label: "Content",
     subMenu: [
       { label: "All Testimonial", path: "/testimonial" },
-      { label: "All Projects", path: "/projects" },
-      { label: "All Products", path: "/products" },
       { label: "All Blogs", path: "/blogs" },
+    ],
+  },
+  {
+    label: "Communities",
+    subMenu: [
+      { label: "Categories", path: "/community-category" },
+      { label: "Groups", path: "/community-group" },
     ],
   },
   {
@@ -27,6 +32,7 @@ export const menuList: Menu[] = [
     subMenu: [
       { label: "CMS", path: "/cms" },
       { label: "Site Content", path: "/settings" },
+      { label: "Email Templates", path: "/email-template" },
     ],
   },
   {

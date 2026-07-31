@@ -4,11 +4,10 @@ import React, { useEffect, useState } from "react";
 import { FileField, InputField } from "@/components/UI/Inputs";
 import { validation } from "./validation";
 import { isEmpty } from "@/lib/isEmpty";
-import { CreateProjectApi, GetProjectApi } from "@/Api/project";
+import { CreateTestimoalApi } from "@/Api/testimonial";
 import { toastMessage } from "@/lib/toast.message";
 import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
-import { CreateTestimoalApi } from "@/Api/testimonial";
 import CardContainer from "@/components/CardContainer";
 
 const AddPage = () => {
@@ -151,7 +150,7 @@ const AddPage = () => {
               disabled={loading}
               className="rounded-lg bg-blue-600 px-6 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-60"
             >
-              Save Project
+              Save Testimonial
             </button>
           </div>
         </form>

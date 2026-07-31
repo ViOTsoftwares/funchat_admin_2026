@@ -4,16 +4,10 @@ import React, { useEffect, useState } from "react";
 import { FileField, InputField } from "@/components/UI/Inputs";
 import { validation } from "./validation";
 import { isEmpty } from "@/lib/isEmpty";
-import {
-  CreateProjectApi,
-  GetProjectApi,
-  OneProjectApi,
-  UpdateProjectApi,
-} from "@/Api/project";
+import { OneTestimoalApi, UpdateTestimoalApi } from "@/Api/testimonial";
 import { toastMessage } from "@/lib/toast.message";
 import { useParams, useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
-import { OneTestimoalApi, UpdateTestimoalApi } from "@/Api/testimonial";
 import CardContainer from "@/components/CardContainer";
 
 const UpdatePage = () => {
@@ -92,7 +86,7 @@ const UpdatePage = () => {
       setLoading(false);
     }
   };
-  const GetOneProject = async () => {
+  const GetOneTestimonial = async () => {
     try {
       const response = await OneTestimoalApi(id);
       if (response?.success) {
@@ -104,7 +98,7 @@ const UpdatePage = () => {
     }
   };
   useEffect(() => {
-    GetOneProject();
+    GetOneTestimonial();
   }, []);
   return (
     <CardContainer>
@@ -131,10 +125,10 @@ const UpdatePage = () => {
       <div className="bg-white rounded-2xl shadow-sm border">
         <div className="border-b px-8 py-6">
           <h1 className="text-2xl font-semibold text-gray-800">
-            Project Settings
+            Testimonial Settings
           </h1>
           <p className="text-sm text-gray-500 mt-1">
-            Manage project information
+            Manage testimonial information
           </p>
         </div>
 
@@ -174,7 +168,7 @@ const UpdatePage = () => {
               disabled={loading}
               className="rounded-lg bg-blue-600 px-6 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-60"
             >
-              Save Project
+              Save Testimonial
             </button>
           </div>
         </form>
