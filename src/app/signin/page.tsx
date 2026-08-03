@@ -106,7 +106,8 @@ export default function SignIn() {
         } catch (err) {
           console.log(err);
         }
-        navigate.push("/");
+        // navigate.push("/");
+        window.location.href = "/";
       } else {
         toastMessage(response.message, "error");
         setLoading(false);
