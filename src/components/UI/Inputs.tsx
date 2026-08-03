@@ -3,6 +3,7 @@ import React from "react";
 export const InputField = ({
   label,
   error,
+  disabled = false,
   ...props
 }: {
   label: string;
@@ -10,6 +11,7 @@ export const InputField = ({
   name?: string;
   type?: string;
   value?: string;
+  disabled?: boolean;
   onChange?: React.ChangeEventHandler<HTMLInputElement>;
 }) => (
   <div className="space-y-1">
@@ -17,9 +19,11 @@ export const InputField = ({
 
     <input
       {...props}
+      disabled={disabled}
       className={`w-full rounded-lg border px-3 py-2 text-sm
         focus:outline-none focus:ring-2 focus:ring-blue-500
         ${error ? "border-red-500" : "border-gray-300"}
+        ${disabled ? "bg-gray-100 text-gray-400 cursor-not-allowed" : ""}
       `}
     />
 
@@ -30,6 +34,7 @@ export const InputField = ({
 export const TextareaField = ({
   label,
   error,
+  disabled = false,
   ...props
 }: {
   label: string;
@@ -37,6 +42,7 @@ export const TextareaField = ({
   name?: string;
   value?: string;
   rows?: number;
+  disabled?: boolean;
   onChange?: React.ChangeEventHandler<HTMLTextAreaElement>;
 }) => (
   <div className="space-y-1">
@@ -44,9 +50,11 @@ export const TextareaField = ({
 
     <textarea
       {...props}
+      disabled={disabled}
       className={`w-full rounded-lg border px-3 py-2 text-sm
         focus:outline-none focus:ring-2 focus:ring-blue-500
         ${error ? "border-red-500" : "border-gray-300"}
+        ${disabled ? "bg-gray-100 text-gray-400 cursor-not-allowed" : ""}
       `}
     />
 

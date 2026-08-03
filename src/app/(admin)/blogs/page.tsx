@@ -9,7 +9,6 @@ import ServerSIdeTable, {
   FilterType,
 } from "@/components/GlobalTable/ServerSIdeTable";
 import Swal from "sweetalert2";
-import { DeleteProjectApi, GetProjectApi } from "@/Api/project";
 import { capitalize } from "@/lib/adminFun";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import { usePermission } from "@/hooks/usePermission";
@@ -50,11 +49,10 @@ export default function List() {
 
           return (
             <span
-              className={`px-2 py-1 rounded text-sm font-medium ${
-                value == "active"
+              className={`px-2 py-1 rounded text-sm font-medium ${value == "active"
                   ? "bg-green-100 text-green-700"
                   : "bg-red-100 text-red-700"
-              }`}
+                }`}
             >
               {capitalize(value)}
             </span>
@@ -70,12 +68,12 @@ export default function List() {
           <div className="flex items-center gap-2">
             {/* EDIT BUTTON */}
             {permission.edit && (
-            <button
-              type="button"
-              onClick={() => {
-                navigate.push("/blogs/update-blog/" + row?.original?._id);
-              }}
-              className="
+              <button
+                type="button"
+                onClick={() => {
+                  navigate.push("/blogs/update-blog/" + row?.original?._id);
+                }}
+                className="
       inline-flex items-center justify-center
       h-9 w-9
       rounded-lg
@@ -89,20 +87,20 @@ export default function List() {
       focus:ring-2
       focus:ring-blue-500
     "
-              title="Edit"
-            >
-              ✏️
-            </button>
+                title="Edit"
+              >
+                ✏️
+              </button>
             )}
 
             {/* DELETE BUTTON */}
             {permission.delete && (
-            <button
-              type="button"
-              onClick={() => {
-                handleDelete(row?.original?._id);
-              }}
-              className="
+              <button
+                type="button"
+                onClick={() => {
+                  handleDelete(row?.original?._id);
+                }}
+                className="
       inline-flex items-center justify-center
       h-9 w-9
       rounded-lg
@@ -114,10 +112,10 @@ export default function List() {
       focus:ring-2
       focus:ring-red-500
     "
-              title="Delete"
-            >
-              🗑️
-            </button>
+                title="Delete"
+              >
+                🗑️
+              </button>
             )}
           </div>
         ),
@@ -202,11 +200,11 @@ export default function List() {
         </div>
 
         {permission.add && (
-<button
-          onClick={() => {
-            navigate.push("/blogs/add-blog");
-          }}
-          className="
+          <button
+            onClick={() => {
+              navigate.push("/blogs/add-blog");
+            }}
+            className="
     inline-flex items-center gap-2
     rounded-xl
     bg-[#0f172a] px-6 py-3
@@ -219,11 +217,11 @@ export default function List() {
     focus:outline-none
     focus:ring-2 focus:ring-[#0f172a] focus:ring-offset-2
   "
-        >
-          <span className="text-lg leading-none">+</span>
-          Add Blog
-        </button>
-)}
+          >
+            <span className="text-lg leading-none">+</span>
+            Add Blog
+          </button>
+        )}
       </div>
 
       {/* Divider */}

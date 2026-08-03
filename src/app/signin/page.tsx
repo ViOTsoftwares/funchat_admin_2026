@@ -67,7 +67,7 @@ export default function SignIn() {
               ? me.result.restriction
               : [];
             const getPerm = (label: string) =>
-              restrictionList.find((r) => r?.module === label) || {};
+              restrictionList.find((r: any) => r?.module === label) || {};
 
             const permPaths = menuList.flatMap((menu) => {
               if (menu.subMenu && menu.subMenu.length > 0) {

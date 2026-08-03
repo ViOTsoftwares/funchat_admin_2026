@@ -31,15 +31,12 @@ export type FilterType = "text" | "number" | "date" | "select";
 export interface ColumnMeta {
   filterType?: FilterType;
   options?: string[];
+  filterOptions?: any[];
 }
 
 interface PaginationState {
   pageIndex: number;
   pageSize: number;
-}
-export interface ColumnMeta {
-  filterType?: FilterType;
-  options?: string[];
 }
 
 interface ServerSideTableProps<T extends object> {

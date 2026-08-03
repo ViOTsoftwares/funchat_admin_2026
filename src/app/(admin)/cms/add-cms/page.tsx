@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import { FileField, InputField } from "@/components/UI/Inputs";
 import { validation } from "./validation";
 import { isEmpty } from "@/lib/isEmpty";
-import { CreateProjectApi, GetProjectApi } from "@/Api/project";
 import { toastMessage } from "@/lib/toast.message";
 import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
@@ -135,7 +134,7 @@ const AddPage = () => {
             onEditorChange={(content: any) =>
               setFormValues((pre) => ({ ...pre, content: content }))
             }
-            //   initialValue="<p>Start writing... add lists, headers, and tables easily!</p>"
+          //   initialValue="<p>Start writing... add lists, headers, and tables easily!</p>"
           />
           {errors.content && (
             <p className="text-xs text-red-500">{errors.content}</p>
