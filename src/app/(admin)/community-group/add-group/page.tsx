@@ -17,6 +17,7 @@ export default function AddGroup() {
     description: "",
     chat_timing: "24/7",
     messageDelay: 0,
+    isPopular: false,
     isActive: true,
   });
 
@@ -161,18 +162,33 @@ export default function AddGroup() {
               placeholder="HTML/CSS, React, Vue, Node.js..."
             />
           </div>
-          <div className="flex items-center">
-            <input
-              type="checkbox"
-              name="isActive"
-              id="isActive"
-              checked={formData.isActive}
-              onChange={handleChange}
-              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-            />
-            <label htmlFor="isActive" className="ml-2 block text-sm text-gray-900">
-              Active
-            </label>
+          <div className="space-y-3 pt-2 border-t border-gray-100">
+            <div className="flex items-center">
+              <input
+                type="checkbox"
+                name="isPopular"
+                id="isPopular"
+                checked={formData.isPopular}
+                onChange={handleChange}
+                className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+              />
+              <label htmlFor="isPopular" className="ml-2 block text-sm font-medium text-gray-900">
+                🔥 Popular Group (Featured on Community Welcome Screen)
+              </label>
+            </div>
+            <div className="flex items-center">
+              <input
+                type="checkbox"
+                name="isActive"
+                id="isActive"
+                checked={formData.isActive}
+                onChange={handleChange}
+                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+              />
+              <label htmlFor="isActive" className="ml-2 block text-sm text-gray-900">
+                Active
+              </label>
+            </div>
           </div>
         </div>
         <div className="mt-8 flex gap-3">

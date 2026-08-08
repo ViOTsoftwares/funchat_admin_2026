@@ -28,6 +28,12 @@ export const menuList: Menu[] = [
     ],
   },
   {
+    label: "Marketing",
+    subMenu: [
+      { label: "Advertisements", path: "/ads" },
+    ],
+  },
+  {
     label: "Settings",
     subMenu: [
       { label: "CMS", path: "/cms" },

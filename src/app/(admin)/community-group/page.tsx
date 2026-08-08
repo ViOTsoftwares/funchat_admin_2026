@@ -39,6 +39,23 @@ export default function List() {
         meta: { filterType: "text" },
       },
       {
+        accessorKey: "isPopular",
+        header: "Featured",
+        meta: { filterType: "text" },
+        cell: ({ row }) => {
+          const isPopular = row?.original?.isPopular;
+          return isPopular ? (
+            <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold bg-indigo-100 text-indigo-800 border border-indigo-200">
+              🔥 Popular
+            </span>
+          ) : (
+            <span className="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium text-gray-400 bg-gray-50 border border-gray-200">
+              Normal
+            </span>
+          );
+        },
+      },
+      {
         accessorKey: "isActive",
         header: "Status",
         meta: { filterType: "text" },

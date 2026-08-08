@@ -13,9 +13,11 @@ export default function AddCategory() {
     name: "",
     slug: "",
     description: "",
+    isPopular: false,
     isActive: true,
   });
   const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   const generateSlug = (text: string) => {
     return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
@@ -28,7 +30,9 @@ export default function AddCategory() {
     } else if (type === "file") {
       const target = e.target as HTMLInputElement;
       if (target.files && target.files[0]) {
-        setImageFile(target.files[0]);
+        const file = target.files[0];
+        setImageFile(file);
+        setImagePreview(URL.createObjectURL(file));
       }
     } else {
       if (name === "name") {
@@ -47,17 +51,18 @@ export default function AddCategory() {
       data.append("name", formData.name);
       data.append("slug", formData.slug);
       data.append("description", formData.description);
+      data.append("isPopular", String(formData.isPopular));
       data.append("isActive", String(formData.isActive));
       if (imageFile) {
         data.append("image", imageFile);
       }
 
       const response: any = await CreateCategoryApi(data);
-      if (response.ok) {
-        toastMessage(response.message, "success");
+      if (response.ok || response.success) {
+        toastMessage(response.message || "Category created successfully", "success");
         navigate.push("/community-category");
       } else {
-        toastMessage(response.message, "error");
+        toastMessage(response.message || "Failed to create category", "error");
       }
     } catch (error) {
       toastMessage("Something went wrong", "error");
@@ -103,13 +108,28 @@ export default function AddCategory() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Image</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Category Image / Logo</label>
+            {imagePreview && (
+              <div className="mb-3 flex items-center gap-4 p-3 bg-gray-50 rounded-lg border border-gray-200">
+                <img
+                  src={imagePreview}
+                  alt="Selected preview"
+                  className="h-16 w-16 rounded-lg object-cover border border-gray-300 bg-white shadow-sm"
+                />
+                <div>
+                  <span className="text-xs font-semibold px-2 py-0.5 rounded bg-blue-100 text-blue-800">
+                    Selected Image
+                  </span>
+                  <p className="text-xs text-gray-500 mt-1">{imageFile?.name}</p>
+                </div>
+              </div>
+            )}
             <input
               type="file"
               name="image"
               accept="image/*"
               onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all file:mr-4 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
             />
           </div>
           <div>
@@ -123,18 +143,33 @@ export default function AddCategory() {
               placeholder="Discuss code, AI developments..."
             />
           </div>
-          <div className="flex items-center">
-            <input
-              type="checkbox"
-              name="isActive"
-              id="isActive"
-              checked={formData.isActive}
-              onChange={handleChange}
-              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-            />
-            <label htmlFor="isActive" className="ml-2 block text-sm text-gray-900">
-              Active
-            </label>
+          <div className="space-y-3 pt-2 border-t border-gray-100">
+            <div className="flex items-center">
+              <input
+                type="checkbox"
+                name="isPopular"
+                id="isPopular"
+                checked={formData.isPopular}
+                onChange={handleChange}
+                className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+              />
+              <label htmlFor="isPopular" className="ml-2 block text-sm font-medium text-gray-900">
+                🔥 Popular Category (Show on Community Welcome Screen)
+              </label>
+            </div>
+            <div className="flex items-center">
+              <input
+                type="checkbox"
+                name="isActive"
+                id="isActive"
+                checked={formData.isActive}
+                onChange={handleChange}
+                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+              />
+              <label htmlFor="isActive" className="ml-2 block text-sm text-gray-900">
+                Active
+              </label>
+            </div>
           </div>
         </div>
         <div className="mt-8 flex gap-3">
