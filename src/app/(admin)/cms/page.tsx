@@ -3,7 +3,8 @@
 import React, { useMemo, useRef, useState } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { usePathname, useRouter } from "next/navigation";
-
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import { toastMessage } from "@/lib/toast.message";
 import ServerSIdeTable from "@/components/GlobalTable/ServerSIdeTable";
 import Swal from "sweetalert2";
@@ -36,12 +37,12 @@ export default function List() {
           <div className="flex items-center gap-2">
             {/* EDIT BUTTON */}
             {permission.edit && (
-            <button
-              type="button"
-              onClick={() => {
-                navigate.push("/cms/update-cms/" + row?.original?._id);
-              }}
-              className="
+              <button
+                type="button"
+                onClick={() => {
+                  navigate.push("/cms/update-cms/" + row?.original?._id);
+                }}
+                className="
       inline-flex items-center justify-center
       h-9 w-9
       rounded-lg
@@ -55,20 +56,20 @@ export default function List() {
       focus:ring-2
       focus:ring-blue-500
     "
-              title="Edit"
-            >
-              ✏️
-            </button>
+                title="Edit"
+              >
+                <EditOutlinedIcon fontSize="small" />
+              </button>
             )}
 
             {/* DELETE BUTTON */}
             {permission.delete && (
-            <button
-              type="button"
-              onClick={() => {
-                handleDelete(row?.original?._id);
-              }}
-              className="
+              <button
+                type="button"
+                onClick={() => {
+                  handleDelete(row?.original?._id);
+                }}
+                className="
       inline-flex items-center justify-center
       h-9 w-9
       rounded-lg
@@ -80,10 +81,10 @@ export default function List() {
       focus:ring-2
       focus:ring-red-500
     "
-              title="Delete"
-            >
-              🗑️
-            </button>
+                title="Delete"
+              >
+                <DeleteOutlineOutlinedIcon fontSize="small" />
+              </button>
             )}
           </div>
         ),
@@ -157,11 +158,11 @@ export default function List() {
         </div>
 
         {permission.add && (
-<button
-          onClick={() => {
-            navigate.push("/cms/add-cms");
-          }}
-          className="
+          <button
+            onClick={() => {
+              navigate.push("/cms/add-cms");
+            }}
+            className="
     inline-flex items-center gap-2
     rounded-xl
     bg-[#0f172a] px-6 py-3
@@ -174,11 +175,11 @@ export default function List() {
     focus:outline-none
     focus:ring-2 focus:ring-[#0f172a] focus:ring-offset-2
   "
-        >
-          <span className="text-lg leading-none">+</span>
-          Add CMS
-        </button>
-)}
+          >
+            <span className="text-lg leading-none">+</span>
+            Add CMS
+          </button>
+        )}
       </div>
 
       {/* Divider */}

@@ -37,7 +37,7 @@ export const menuList: Menu[] = [
     label: "Settings",
     subMenu: [
       { label: "CMS", path: "/cms" },
-      { label: "Site Content", path: "/settings" },
+      { label: "Site Settings", path: "/settings" },
       { label: "Email Templates", path: "/email-template" },
     ],
   },
