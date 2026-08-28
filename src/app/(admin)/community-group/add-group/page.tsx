@@ -18,6 +18,7 @@ export default function AddGroup() {
     chat_timing: "24/7",
     messageDelay: 0,
     isPopular: false,
+    allowImages: true,
     isActive: true,
   });
 
@@ -174,6 +175,19 @@ export default function AddGroup() {
               />
               <label htmlFor="isPopular" className="ml-2 block text-sm font-medium text-gray-900">
                 🔥 Popular Group (Featured on Community Welcome Screen)
+              </label>
+            </div>
+            <div className="flex items-center">
+              <input
+                type="checkbox"
+                name="allowImages"
+                id="allowImages"
+                checked={formData.allowImages}
+                onChange={handleChange}
+                className="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-gray-300 rounded"
+              />
+              <label htmlFor="allowImages" className="ml-2 block text-sm font-medium text-gray-900">
+                🖼️ Allow Image Uploads in this Group (Max 5MB)
               </label>
             </div>
             <div className="flex items-center">

@@ -64,8 +64,47 @@ export const UpdateSettingApi = async (payload: any) => {
   } catch (error: any) {
     return {
       success: false,
-      message: error?.response?.data?.message || "Login failed",
+      message: error?.response?.data?.message || "Request failed",
       errors: error?.response?.data?.errors || {},
     };
   }
 };
+
+export interface CommunityMediaSettings {
+  enabled: boolean;
+  maxFileSizeMB: number;
+}
+
+export const GetCommunityMediaSettingsApi = async (): Promise<{
+  success: boolean;
+  result?: CommunityMediaSettings;
+  message?: string;
+}> => {
+  try {
+    const { data } = await baseApi.get("/settings/community-media", {
+      withCredentials: true,
+    });
+    return data;
+  } catch (error: any) {
+    return {
+      success: false,
+      message: error?.response?.data?.message || "Failed to fetch community media settings",
+    };
+  }
+};
+
+export const UpdateCommunityMediaSettingsApi = async (payload: CommunityMediaSettings) => {
+  try {
+    const { data } = await baseApi.post("/settings/community-media", payload, {
+      withCredentials: true,
+    });
+    return data;
+  } catch (error: any) {
+    return {
+      success: false,
+      message: error?.response?.data?.message || "Failed to update community media settings",
+      errors: error?.response?.data?.errors || {},
+    };
+  }
+};
+

@@ -3,11 +3,13 @@ import React from "react";
 export const InputField = ({
   label,
   error,
+  helperText,
   disabled = false,
   ...props
 }: {
   label: string;
   error?: string;
+  helperText?: string;
   name?: string;
   type?: string;
   value?: string;
@@ -27,6 +29,12 @@ export const InputField = ({
       `}
     />
 
+    {helperText && (
+      <p className="text-xs text-blue-600/90 font-medium flex items-center gap-1 mt-1 bg-blue-50/60 px-2.5 py-1 rounded-md border border-blue-100/80">
+        <span className="text-blue-600 font-semibold">📍 Reflected on:</span> {helperText}
+      </p>
+    )}
+
     {error && <p className="text-xs text-red-500">{error}</p>}
   </div>
 );
@@ -34,11 +42,13 @@ export const InputField = ({
 export const TextareaField = ({
   label,
   error,
+  helperText,
   disabled = false,
   ...props
 }: {
   label: string;
   error?: string;
+  helperText?: string;
   name?: string;
   value?: string;
   rows?: number;
@@ -58,6 +68,12 @@ export const TextareaField = ({
       `}
     />
 
+    {helperText && (
+      <p className="text-xs text-blue-600/90 font-medium flex items-center gap-1 mt-1 bg-blue-50/60 px-2.5 py-1 rounded-md border border-blue-100/80">
+        <span className="text-blue-600 font-semibold">📍 Reflected on:</span> {helperText}
+      </p>
+    )}
+
     {error && <p className="text-xs text-red-500">{error}</p>}
   </div>
 );
@@ -65,11 +81,13 @@ export const TextareaField = ({
 export const FileField = ({
   label,
   error,
+  helperText,
   preview,
   onChange,
 }: {
   label: string;
   error?: string;
+  helperText?: string;
   preview?: string | null;
   onChange?: React.ChangeEventHandler<HTMLInputElement>;
 }) => (
@@ -94,6 +112,12 @@ export const FileField = ({
         />
         <span className="text-xs text-gray-500">Preview</span>
       </div>
+    )}
+
+    {helperText && (
+      <p className="text-xs text-blue-600/90 font-medium flex items-center gap-1 mt-1 bg-blue-50/60 px-2.5 py-1 rounded-md border border-blue-100/80">
+        <span className="text-blue-600 font-semibold">📍 Reflected on:</span> {helperText}
+      </p>
     )}
 
     {error && <p className="text-xs text-red-500">{error}</p>}

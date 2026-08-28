@@ -13,15 +13,19 @@ import {
   UpdateSettingApi,
   GetFeatureControlApi,
   UpdateFeatureControlApi,
+  GetCommunityMediaSettingsApi,
+  UpdateCommunityMediaSettingsApi,
   FeatureControl,
   FeatureStatus,
+  CommunityMediaSettings,
 } from "@/Api/setting";
 import { toastMessage } from "@/lib/toast.message";
 import CardContainer from "@/components/CardContainer";
 import { usePermission } from "@/hooks/usePermission";
+import { ENV } from "@/config";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
-type SettingsTab = "app" | "feature";
+type SettingsTab = "app" | "feature" | "media";
 type FeatureTab = "chat" | "video" | "community";
 
 // ─── Status option config ────────────────────────────────────────────────────
@@ -172,6 +176,14 @@ const SettingsPage = () => {
   const [featureLoading, setFeatureLoading] = useState(false);
   const [featureSaved, setFeatureSaved] = useState(false);
 
+  // ── Community Media Upload State ──
+  const [mediaSettings, setMediaSettings] = useState<CommunityMediaSettings>({
+    enabled: true,
+    maxFileSizeMB: 5,
+  });
+  const [mediaLoading, setMediaLoading] = useState(false);
+  const [mediaSaved, setMediaSaved] = useState(false);
+
   // ── Helpers ──
   const revokeIfBlobUrl = (url: string | null) => {
     if (url && url.startsWith("blob:")) URL.revokeObjectURL(url);
@@ -259,17 +271,41 @@ const SettingsPage = () => {
     }
   };
 
+  // ── Media Settings handlers ──
+  const handleMediaSettingsSave = async () => {
+    if (!permission.edit) {
+      toastMessage("You don't have permission to update media settings", "error");
+      return;
+    }
+    setMediaLoading(true);
+    try {
+      const response = await UpdateCommunityMediaSettingsApi(mediaSettings);
+      if (response.success) {
+        toastMessage("Community media settings updated successfully", "success");
+        setMediaSaved(true);
+      } else {
+        toastMessage(response.message || "Failed to update", "error");
+      }
+    } catch {
+      toastMessage("Something went wrong", "error");
+    } finally {
+      setMediaLoading(false);
+    }
+  };
+
   // ── Load data ──
   useEffect(() => {
     getsetting();
     getFeatureControl();
+    getMediaSettings();
   }, []);
 
   const getsetting = async () => {
     try {
       setLoading(true);
       const response = await GetSettingApi();
-      setLogoPreview(response?.result?.logo);
+      const logoFilename = response?.result?.logo;
+      setLogoPreview(logoFilename ? `${ENV.IMAGE_URL}/logos/${logoFilename}` : null);
       setFormValues({ ...response?.result, id: response?.result._id, logo: null });
     } catch (error) {
       console.log(error);
@@ -289,13 +325,24 @@ const SettingsPage = () => {
     }
   };
 
+  const getMediaSettings = async () => {
+    try {
+      const response = await GetCommunityMediaSettingsApi();
+      if (response.success && response.result) {
+        setMediaSettings(response.result);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <CardContainer>
       {/* ── Page Header ── */}
       <div className="rounded-2xl bg-white shadow-sm border border-gray-100 overflow-hidden">
         <div className="border-b px-8 py-6">
           <h1 className="text-2xl font-semibold text-gray-800">Application Settings</h1>
-          <p className="text-sm text-gray-500 mt-1">Manage company configuration and feature availability</p>
+          <p className="text-sm text-gray-500 mt-1">Manage company configuration, feature availability, and media limits</p>
         </div>
 
         {/* ── Top-level Tabs ── */}
@@ -324,6 +371,18 @@ const SettingsPage = () => {
           >
             <span>🎛️</span> Feature Control
           </button>
+          <button
+            id="settings-tab-media"
+            type="button"
+            onClick={() => setActiveSettingsTab("media")}
+            className={`flex items-center gap-2 px-6 py-4 text-sm font-medium transition-all duration-200 border-b-2 ${
+              activeSettingsTab === "media"
+                ? "border-blue-600 text-blue-600 bg-white"
+                : "border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-100"
+            }`}
+          >
+            <span>🖼️</span> Community Media
+          </button>
         </div>
 
         {/* ═══════════════════════════════════════════════════════════════
@@ -338,6 +397,7 @@ const SettingsPage = () => {
                 value={title}
                 onChange={handleChange}
                 error={errors.title}
+                helperText="Browser Tab Title, Header Navbar Brand Title, SEO Meta Title & Landing Page Hero"
               />
               <InputField
                 label="Project"
@@ -345,6 +405,7 @@ const SettingsPage = () => {
                 value={project}
                 onChange={handleChange}
                 error={errors.project}
+                helperText="Footer Copyright Notice, App Branding & Global SEO Meta Description"
               />
               <InputField
                 label="Client"
@@ -352,6 +413,7 @@ const SettingsPage = () => {
                 value={client}
                 onChange={handleChange}
                 error={errors.client}
+                helperText="Admin Console Header, Dashboard Metadata & Client Attribution"
               />
               <InputField
                 label="Phone"
@@ -359,6 +421,7 @@ const SettingsPage = () => {
                 value={phone}
                 onChange={handleChange}
                 error={errors.phone}
+                helperText="Footer Contact Info, Support Modal & Contact Us Page"
               />
               <InputField
                 label="Email"
@@ -367,6 +430,7 @@ const SettingsPage = () => {
                 value={email}
                 onChange={handleChange}
                 error={errors.email}
+                helperText="Footer Contact Email, Support Desk & User Notification Footers"
               />
             </div>
             <TextareaField
@@ -376,12 +440,14 @@ const SettingsPage = () => {
               value={address}
               onChange={handleChange}
               error={errors.address}
+              helperText="Footer Office Location, Contact Us Page & Legal Terms/Privacy Footers"
             />
             <FileField
               label="Company Logo"
               preview={logoPreview}
               error={errors.logo}
               onChange={handleLogoChange}
+              helperText="Header Navbar Logo, Landing Page Hero Logo, Footer Logo & Site Favicon"
             />
             <InputField
               label="X link"
@@ -389,27 +455,31 @@ const SettingsPage = () => {
               value={xlink}
               onChange={handleChange}
               error={errors.xlink}
+              helperText="Header Top Bar Socials, Footer Social Icons & Community Footer"
             />{" "}
             <InputField
-              label="linkedinlink"
+              label="LinkedIn link"
               name="linkedinlink"
               value={linkedinlink}
               onChange={handleChange}
               error={errors.linkedinlink}
+              helperText="Header Top Bar Socials, Footer Social Icons & About Us Page"
             />{" "}
             <InputField
-              label="facebooklink"
+              label="Facebook link"
               name="facebooklink"
               value={facebooklink}
               onChange={handleChange}
               error={errors.facebooklink}
+              helperText="Header Top Bar Socials, Footer Social Icons & Marketing Pages"
             />{" "}
             <InputField
-              label="Instagramlink"
+              label="Instagram link"
               name="instagramlink"
               value={instagramlink}
               onChange={handleChange}
               error={errors.instagramlink}
+              helperText="Header Top Bar Socials, Footer Social Icons & Community Highlights"
             />
             <div className="flex justify-end gap-3 pt-4 border-t">
               <button
@@ -548,6 +618,148 @@ const SettingsPage = () => {
                     <>✓ Saved</>
                   ) : (
                     <>Save Feature Control</>
+                  )}
+                </button>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* ═══════════════════════════════════════════════════════════════
+            COMMUNITY MEDIA SETTINGS TAB
+        ═══════════════════════════════════════════════════════════════ */}
+        {activeSettingsTab === "media" && (
+          <div className="px-8 py-6 space-y-6">
+            <div className="flex items-center gap-3 mb-4">
+              <span className="text-3xl">🖼️</span>
+              <div>
+                <h3 className="text-lg font-semibold text-gray-800">Community Image Upload Controls</h3>
+                <p className="text-sm text-gray-500">Configure file size limits and image sharing in community chat discussions</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Enable / Disable Card */}
+              <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-base font-semibold text-gray-900">Community Image Upload</span>
+                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ${
+                      mediaSettings.enabled ? "bg-emerald-100 text-emerald-800" : "bg-rose-100 text-rose-800"
+                    }`}>
+                      {mediaSettings.enabled ? "Enabled" : "Disabled"}
+                    </span>
+                  </div>
+                  <p className="text-sm text-gray-500 leading-relaxed">
+                    When enabled, users in community groups can attach and share photos directly in chat messages.
+                  </p>
+                </div>
+                <div className="mt-6 pt-4 border-t border-gray-100 flex items-center justify-between">
+                  <span className="text-sm font-medium text-gray-700">Allow image attachments</span>
+                  <label className="relative inline-flex items-center cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={mediaSettings.enabled}
+                      onChange={(e) => {
+                        setMediaSettings((prev) => ({ ...prev, enabled: e.target.checked }));
+                        setMediaSaved(false);
+                      }}
+                      className="sr-only peer"
+                    />
+                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                  </label>
+                </div>
+              </div>
+
+              {/* Max Size Config Card */}
+              <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-base font-semibold text-gray-900">Maximum File Size</span>
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-100 text-blue-800">
+                      {mediaSettings.maxFileSizeMB} MB Max
+                    </span>
+                  </div>
+                  <p className="text-sm text-gray-500 leading-relaxed">
+                    Set the upper limit for uploaded photos. Strict system limit is capped at 5MB to optimize bandwidth and fast loading.
+                  </p>
+                </div>
+                <div className="mt-6 pt-4 border-t border-gray-100">
+                  <label className="block text-xs font-semibold text-gray-600 uppercase tracking-wider mb-2">
+                    Max Size (MB)
+                  </label>
+                  <select
+                    value={mediaSettings.maxFileSizeMB}
+                    onChange={(e) => {
+                      setMediaSettings((prev) => ({ ...prev, maxFileSizeMB: Number(e.target.value) }));
+                      setMediaSaved(false);
+                    }}
+                    className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm font-medium text-gray-800 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                  >
+                    <option value={1}>1 MB</option>
+                    <option value={2}>2 MB</option>
+                    <option value={3}>3 MB</option>
+                    <option value={4}>4 MB</option>
+                    <option value={5}>5 MB (Recommended)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            {/* Allowed Formats info banner */}
+            <div className="rounded-xl border border-indigo-100 bg-indigo-50/50 p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              <div>
+                <p className="text-sm font-semibold text-indigo-950">Supported Image Formats</p>
+                <p className="text-xs text-indigo-700 mt-0.5">Images are validated on upload and served securely with cache optimization</p>
+              </div>
+              <div className="flex items-center gap-2 flex-wrap">
+                {["PNG", "JPG / JPEG", "WEBP", "GIF"].map((fmt) => (
+                  <span key={fmt} className="px-2.5 py-1 bg-white border border-indigo-200 text-indigo-700 rounded-lg text-xs font-semibold shadow-2xs">
+                    {fmt}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* Save Button */}
+            <div className="flex justify-end gap-3 pt-6 border-t mt-6">
+              <button
+                type="button"
+                onClick={() => {
+                  setMediaSettings({ enabled: true, maxFileSizeMB: 5 });
+                  setMediaSaved(false);
+                }}
+                className="rounded-lg border px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 transition-colors"
+              >
+                Reset Default (5MB)
+              </button>
+              {permission.edit && (
+                <button
+                  id="media-settings-save-btn"
+                  type="button"
+                  onClick={handleMediaSettingsSave}
+                  disabled={mediaLoading}
+                  className={`
+                    flex items-center gap-2 rounded-lg px-6 py-2 text-sm font-medium text-white transition-all duration-200
+                    ${mediaSaved
+                      ? "bg-emerald-500 hover:bg-emerald-600"
+                      : "bg-blue-600 hover:bg-blue-700"
+                    }
+                    disabled:opacity-60 disabled:cursor-not-allowed
+                  `}
+                >
+                  {mediaLoading ? (
+                    <>
+                      <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+                      </svg>
+                      Saving…
+                    </>
+                  ) : mediaSaved ? (
+                    <>✓ Saved</>
+                  ) : (
+                    <>Save Media Settings</>
                   )}
                 </button>
               )}
