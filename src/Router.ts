@@ -42,6 +42,12 @@ export const menuList: Menu[] = [
     ],
   },
   {
+    label: "User Management",
+    subMenu: [
+      { label: "App Users", path: "/users" },
+    ],
+  },
+  {
     label: "Admin Controller",
     subMenu: [
       { label: "Admin", path: "/admin" },

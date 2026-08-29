@@ -3,6 +3,7 @@
 import React, { useMemo, useRef } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { useRouter } from "next/navigation";
+import { Pencil, Trash2 } from "lucide-react";
 
 import { toastMessage } from "@/lib/toast.message";
 import ServerSIdeTable from "@/components/GlobalTable/ServerSIdeTable";
@@ -99,75 +100,47 @@ export default function List() {
         id: "actions",
         header: "Action",
         enableColumnFilter: false,
-
         cell: ({ row }) => (
           <div className="flex items-center gap-2">
-            {/* EDIT BUTTON */}
             {adminPermission.edit && (
-            <button
-              type="button"
-              onClick={() => {
-                if (!adminPermission.edit) {
-                  toastMessage("You don't have permission to edit", "error");
-                  return;
-                }
-                navigate.push("/admin/update-admin/" + row?.original?._id);
-              }}
-              disabled={!adminPermission.edit}
-              className="
-      inline-flex items-center justify-center
-      h-9 w-9
-      rounded-lg
-      border border-gray-300
-      bg-white
-      text-gray-700
-      transition
-      hover:bg-gray-100
-      hover:text-gray-900
-      focus:outline-none
-      focus:ring-2
-      focus:ring-blue-500
-    "
-              title="Edit"
-            >
-              ✏️
-            </button>
+              <button
+                type="button"
+                onClick={() => {
+                  if (!adminPermission.edit) {
+                    toastMessage("You don't have permission to edit", "error");
+                    return;
+                  }
+                  navigate.push("/admin/update-admin/" + row?.original?._id);
+                }}
+                disabled={!adminPermission.edit}
+                className="inline-flex items-center justify-center h-9 w-9 rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition focus:outline-none focus:ring-2 focus:ring-blue-500"
+                title="Edit"
+              >
+                <Pencil className="w-4 h-4" />
+              </button>
             )}
 
-            {/* DELETE BUTTON */}
             {adminPermission.delete && (
-            <button
-              type="button"
-              onClick={() => {
-                if (!adminPermission.delete) {
-                  toastMessage("You don't have permission to delete", "error");
-                  return;
-                }
-                handleDelete(row?.original?._id);
-              }}
-              disabled={!adminPermission.delete}
-              className="
-      inline-flex items-center justify-center
-      h-9 w-9
-      rounded-lg
-      bg-red-600
-      text-white
-      transition
-      hover:bg-red-700
-      focus:outline-none
-      focus:ring-2
-      focus:ring-red-500
-    "
-              title="Delete"
-            >
-              🗑️
-            </button>
+              <button
+                type="button"
+                onClick={() => {
+                  if (!adminPermission.delete) {
+                    toastMessage("You don't have permission to delete", "error");
+                    return;
+                  }
+                  handleDelete(row?.original?._id);
+                }}
+                disabled={!adminPermission.delete}
+                className="inline-flex items-center justify-center h-9 w-9 rounded-lg bg-red-600 text-white hover:bg-red-700 transition focus:outline-none focus:ring-2 focus:ring-red-500"
+                title="Delete"
+              >
+                <Trash2 className="w-4 h-4" />
+              </button>
             )}
           </div>
         ),
       },
     ];
-
     return baseColumns;
   }, [navigate, adminPermission.edit, adminPermission.delete]);
 
@@ -180,23 +153,21 @@ export default function List() {
     pageSize: number;
     filter: any;
   }) => {
-    // Build request body
     const body = {
-      page: pageIndex + 1, // your API expects 1-based page
+      page: pageIndex + 1,
       limit: pageSize,
       filter,
     };
 
     const res = await AdminListApi(body);
-    console.log("resresres", res?.result?.list);
     return {
       data: res?.result?.list || [],
       total: res?.result?.count || 0,
     };
   };
+
   const handleDelete = async (id: any) => {
     try {
-      console.log(id);
       Swal.fire({
         title: "Are you sure?",
         text: "This action cannot be undone.",
@@ -217,9 +188,10 @@ export default function List() {
         }
       });
     } catch (error) {
-      console.log(error, "kkkkkkkkkkkk");
+      console.log(error);
     }
   };
+
   return (
     <div className="space-y-5">
       {/* Breadcrumbs */}
@@ -235,33 +207,21 @@ export default function List() {
         </div>
 
         {adminPermission.add && (
-<button
-          onClick={() => {
-            if (!adminPermission.add) {
-              toastMessage("You don't have permission to add", "error");
-              return;
-            }
-            navigate.push("/admin/add-admin");
-          }}
-          disabled={!adminPermission.add}
-          className="
-    inline-flex items-center gap-2
-    rounded-xl
-    bg-[#0f172a] px-6 py-3
-    text-sm font-semibold text-white
-    shadow-md
-    transition-all duration-200
-    hover:bg-[#020617]
-    hover:shadow-lg
-    active:scale-95
-    focus:outline-none
-    focus:ring-2 focus:ring-[#0f172a] focus:ring-offset-2
-  "
-        >
-          <span className="text-lg leading-none">+</span>
-          Add Admin
-        </button>
-)}
+          <button
+            onClick={() => {
+              if (!adminPermission.add) {
+                toastMessage("You don't have permission to add", "error");
+                return;
+              }
+              navigate.push("/admin/add-admin");
+            }}
+            disabled={!adminPermission.add}
+            className="inline-flex items-center gap-2 rounded-xl bg-[#0f172a] px-6 py-3 text-sm font-semibold text-white shadow-md transition-all duration-200 hover:bg-[#020617] hover:shadow-lg active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#0f172a] focus:ring-offset-2"
+          >
+            <span className="text-lg leading-none">+</span>
+            Add Admin
+          </button>
+        )}
       </div>
 
       {/* Divider */}
