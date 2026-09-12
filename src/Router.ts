@@ -28,6 +28,13 @@ export const menuList: Menu[] = [
     ],
   },
   {
+    label: "Game Management",
+    subMenu: [
+      { label: "All Games", path: "/games" },
+      { label: "Add Game", path: "/games/add-game" },
+    ],
+  },
+  {
     label: "Marketing",
     subMenu: [
       { label: "Advertisements", path: "/ads" },
