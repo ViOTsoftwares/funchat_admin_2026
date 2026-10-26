@@ -6,6 +6,7 @@ export interface FeatureControl {
   chat: FeatureStatus;
   video: FeatureStatus;
   community: FeatureStatus;
+  game: FeatureStatus;
 }
 
 export const GetFeatureControlApi = async (): Promise<{

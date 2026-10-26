@@ -26,7 +26,7 @@ import { ENV } from "@/config";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 type SettingsTab = "app" | "feature" | "media";
-type FeatureTab = "chat" | "video" | "community";
+type FeatureTab = "chat" | "video" | "community" | "game";
 
 // ─── Status option config ────────────────────────────────────────────────────
 const STATUS_OPTIONS: {
@@ -71,6 +71,7 @@ const FEATURE_TABS: { key: FeatureTab; label: string; icon: string; color: strin
   { key: "chat", label: "Chat", icon: "💬", color: "from-blue-500 to-cyan-400" },
   { key: "video", label: "Video", icon: "🎥", color: "from-rose-500 to-pink-400" },
   { key: "community", label: "Community", icon: "👥", color: "from-violet-500 to-purple-400" },
+  { key: "game", label: "Game", icon: "🎮", color: "from-amber-500 to-orange-400" },
 ];
 
 // ─── Sub-component: Status Picker ────────────────────────────────────────────
@@ -172,6 +173,7 @@ const SettingsPage = () => {
     chat: "live",
     video: "live",
     community: "live",
+    game: "live",
   });
   const [featureLoading, setFeatureLoading] = useState(false);
   const [featureSaved, setFeatureSaved] = useState(false);
@@ -511,7 +513,7 @@ const SettingsPage = () => {
               <div>
                 <p className="text-sm font-medium text-blue-800">Feature Visibility Control</p>
                 <p className="text-xs text-blue-600 mt-0.5">
-                  Control the availability of Chat, Video, and Community features for end users.
+                  Control the availability of Chat, Video, Community, and Game features for end users.
                   Changes apply immediately once saved.
                 </p>
               </div>
@@ -559,7 +561,7 @@ const SettingsPage = () => {
             </div>
 
             {/* Summary strip */}
-            <div className="mt-6 grid grid-cols-3 gap-3">
+            <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-3">
               {FEATURE_TABS.map((tab) => {
                 const statusInfo = STATUS_OPTIONS.find((s) => s.value === featureControl[tab.key])!;
                 return (
@@ -584,7 +586,7 @@ const SettingsPage = () => {
               <button
                 type="button"
                 onClick={() => {
-                  setFeatureControl({ chat: "live", video: "live", community: "live" });
+                  setFeatureControl({ chat: "live", video: "live", community: "live", game: "live" });
                   setFeatureSaved(false);
                 }}
                 className="rounded-lg border px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 transition-colors"
